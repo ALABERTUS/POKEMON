@@ -8,7 +8,7 @@ const PokemonDetails = () => {
     const getPokemonData = async () => {
       try {
         const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=100&offset=0');
-        setPokemonData(response.data);
+        setPokemonData(response.data.results);
       } catch (error) {
         console.error(error);
       }
@@ -16,16 +16,20 @@ const PokemonDetails = () => {
 
     getPokemonData();
   }, []);
+  const extractPokemonId = (url) => {
+    const urlParts = url.split('/');
+    return urlParts[urlParts.length - 2];
+  };
+  
 
   return (
     <div>
       <h1>Pokemon Details</h1>
       {pokemonData.map((pokemon) => (
-        <div key={pokemon.id}>
+        <div key={pokemon.name}>
           <h2>{pokemon.name}</h2>
-          <p>Height: {pokemon.height}</p>
-          <p>Weight: {pokemon.weight}</p>
-          {/* Show other characteristics here */}
+          <img src={`https://pokeres.bastionbot.org/images/pokemon/${extractPokemonId(pokemon.url)}.png`} alt={pokemon.name} />
+          <p>URL: {pokemon.url}</p>
         </div>
       ))}
     </div>
@@ -33,3 +37,4 @@ const PokemonDetails = () => {
 };
 
 export default PokemonDetails;
+
